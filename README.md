@@ -1,7 +1,7 @@
 
 ```sh
 # create conda environment
-conda create -n rfast -c conda-forge python numpy numba scipy ruamel.yaml astropy emcee dynesty multiprocess scikit-build cython pyyaml threadpoolctl p_map
+conda create -n rfast -c conda-forge python numpy numba scipy ruamel.yaml astropy emcee dynesty multiprocess scikit-build cython pyyaml threadpoolctl p-tqdm
 
 # activate
 conda activate rfast
