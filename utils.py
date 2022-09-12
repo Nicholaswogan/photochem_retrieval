@@ -81,6 +81,6 @@ class FluxRetrieval():
         usol = np.ones_like(self.pc.var.usol_init)*1e-40
         success = self.equilibrium(usol)
         if success:
-            return success, self.equilibrium_result()
+            return success, self.equilibrium_result(success)
         else:
             return success, self.equilibrium_result(success)
