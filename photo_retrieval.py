@@ -5,7 +5,7 @@ from dynesty import utils as dyfunc
 import rfast
 from photochem import zahnle_earth
 from utils import FluxRetrieval
-from pathos.multiprocessing import ProcessingPool as Pool
+from p_tqdm import p_map
 from threadpoolctl import threadpool_limits
 threadpool_limits(limits=1)
 
@@ -38,6 +38,8 @@ flx = FluxRetrieval(zahnle_earth,\
             "./input/settings_Archean.yaml",\
             "./input/Sun_4.0Ga.txt",\
             "./input/atmosphere_Archean.txt")
+flx.mxsteps = 30000
+flx.pc.var.verbose = 0
 
 def wrapper(log10mix):
         return flx.find_equilibrium(log10mix)
@@ -48,8 +50,7 @@ if __name__ == "__main__":
     NUM_PROCESS = 48
 
     samp = samples_for_photo(filename, nr, flx, r)
-    with Pool(NUM_PROCESS) as p:
-        res = p.map(wrapper, samp)
+    res = p_map(wrapper, samp, num_cpus=NUM_PROCESS)
 
     with open('flux_retrieval.pkl', 'wb') as f:
         pickle.dump(res, f)
