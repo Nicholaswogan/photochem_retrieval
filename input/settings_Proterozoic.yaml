@@ -1,0 +1,69 @@
+atmosphere-grid:
+  bottom: 0.0 # cm
+  top: 1.0e7 # cm
+  number-of-layers: 50
+
+photolysis-grid:
+  regular-grid: true
+  lower-wavelength: 92.5 # nm
+  upper-wavelength: 855.0 # nm
+  number-of-bins: 200
+
+planet:
+  background-gas: N2
+  surface-pressure: 1.013 # bar
+  planet-mass: 5.972e27 # grams
+  planet-radius: 6.371e8 # cm. Radius to bottom of atmosphere-grid
+  surface-albedo: 0.25 # cm
+  diurnal-averaging-factor: 0.5
+  solar-zenith-angle: 60.0
+  hydrogen-escape:
+    type: diffusion limited
+  water:
+    fix-water-in-troposphere: true
+    relative-humidity: manabe
+    gas-rainout: true
+    rainfall-rate: 1
+    tropopause-altitude: 1.1e6 # cm
+    water-condensation: true
+    condensation-rate: {A: 1.0e-5, rhc: 0.01, rh0: 0.015}
+
+particles:
+- name: H2SO4aer
+  condensation-rate: {A: 1.0e-5, rhc: 1.0, rh0: 1.05}
+- name: HCNaer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: HCCCNaer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: CH3CNaer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: C2H2aer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: C2H4aer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: C2H6aer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: C4H4aer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: N2Oaer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}
+- name: NH3aer
+  condensation-rate: {A: 1.0e-8, rhc: 1.0, rh0: 1.05}  
+  
+boundary-conditions:
+- name: CO2
+  lower-boundary: {type: mix, mix: 2e-2}
+  upper-boundary: {type: veff, veff: 0.0}
+- name: CH4
+  lower-boundary: {type: mix, mix: 1e-4}
+  upper-boundary: {type: veff, veff: 0.0}
+- name: O2
+  lower-boundary: {type: mix, mix: 1e-3}
+  upper-boundary: {type: veff, veff: 0.0}
+- name: O1D
+  type: short lived
+- name: N2D
+  type: short lived
+- name: 1CH2
+  type: short lived
+
