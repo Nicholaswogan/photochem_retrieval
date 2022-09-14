@@ -17,7 +17,7 @@ rm -rf rfast
 # photochem
 git clone --recursive --branch=dev https://github.com/Nicholaswogan/photochem
 cd photochem
-git checkout c01e8a92cba8bc7512c561a00d7bf5691a22a67d
+git checkout 3cb0cdf636dc1dddc9934d322c7165edc115be71
 python -m pip install --no-deps --no-build-isolation . -v
 cd ..
 rm -rf photochem

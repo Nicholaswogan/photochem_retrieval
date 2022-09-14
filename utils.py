@@ -6,7 +6,7 @@ class FluxRetrieval():
     
     mxsteps = 50000
     equilibrium_time = 1e17
-    burnin_redox_steps = 10000
+    burnin_redox_steps = 5000
     check_redox_steps = 1000
     redox_tolerance = 1e-5
     species = ['CO2','CO','CH4','H2','O2']

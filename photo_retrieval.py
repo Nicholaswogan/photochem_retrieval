@@ -32,12 +32,12 @@ def samples_for_photo(filename, nr, flx, r):
     return [samp_n[i,:] for i in range(samp_n.shape[0])]
 
 # stuff to be passed by scope
-r = rfast.Rfast('input/inputs.scr')
+r = rfast.Rfast('input/inputs_Proterozoic.scr')
 r.initialize_retrieval("input/rpars.txt")
 flx = FluxRetrieval(zahnle_earth,\
-            "./input/settings_Archean.yaml",\
-            "./input/Sun_4.0Ga.txt",\
-            "./input/atmosphere_Archean.txt")
+            "./input/settings_Proterozoic.yaml",\
+            "./input/Sun_2.4Ga.txt",\
+            "./input/atmosphere_Proterozoic.txt")
 flx.mxsteps = 30000
 flx.pc.var.verbose = 0
 
@@ -45,13 +45,13 @@ def wrapper(log10mix):
         return flx.find_equilibrium(log10mix)
 
 if __name__ == "__main__":
-    filename = 'normal_retrieval.pkl'
-    nr = 10000
+    filename = 'results/Proterozoic_retrieval.pkl'
+    nr = 20000
     NUM_PROCESS = 48
 
     samp = samples_for_photo(filename, nr, flx, r)
     res = p_map(wrapper, samp, num_cpus=NUM_PROCESS)
 
-    with open('flux_retrieval.pkl', 'wb') as f:
+    with open('results/Proterozoic_flux_retrieval.pkl', 'wb') as f:
         pickle.dump(res, f)
 
