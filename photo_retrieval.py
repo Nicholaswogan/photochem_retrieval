@@ -32,7 +32,7 @@ def samples_for_photo(filename, nr, flx, r):
     return [samp_n[i,:] for i in range(samp_n.shape[0])]
 
 # stuff to be passed by scope
-r = rfast.Rfast('input/inputs_Proterozoic.scr')
+r = rfast.Rfast('input/inputs_Proterozoic_1.scr')
 r.initialize_retrieval("input/rpars.txt")
 flx = FluxRetrieval(zahnle_earth,\
             "./input/settings_Proterozoic.yaml",\
