@@ -5,7 +5,7 @@ import dynesty
 import rfast
 
 # initialize radiative transfer and retrieval
-r = rfast.Rfast('input/inputs_Proterozoic.scr')
+r = rfast.Rfast('input/inputs_Proterozoic_1.scr')
 r.initialize_retrieval("input/rpars.txt")
 
 F1, F2 = r.genspec_scr()
@@ -27,5 +27,5 @@ if __name__ == "__main__":
                                         nlive = 1000, pool=pool, queue_size=NPROCESS)
         sampler.run_nested(dlogz=0.001)
 
-    with open('results/Proterozoic_retrieval.pkl', 'wb') as f:
+    with open('results/Proterozoic_retrieval_1.pkl', 'wb') as f:
         pickle.dump(sampler.results, f)

@@ -5,7 +5,7 @@ from dynesty import utils as dyfunc
 import rfast
 from photochem import zahnle_earth
 from utils import FluxRetrieval
-from p_tqdm import p_map
+from p_tqdm import p_umap
 from threadpoolctl import threadpool_limits
 threadpool_limits(limits=1)
 
@@ -37,7 +37,8 @@ r.initialize_retrieval("input/rpars.txt")
 flx = FluxRetrieval(zahnle_earth,\
             "./input/settings_Proterozoic.yaml",\
             "./input/Sun_2.4Ga.txt",\
-            "./input/atmosphere_Proterozoic.txt")
+            "./input/atmosphere_Proterozoic.txt",\
+            "results/Proterozoic_flux_retrieval_1.pkl")
 flx.mxsteps = 30000
 flx.pc.var.verbose = 0
 
@@ -45,13 +46,10 @@ def wrapper(log10mix):
         return flx.find_equilibrium(log10mix)
 
 if __name__ == "__main__":
-    filename = 'results/Proterozoic_retrieval.pkl'
-    nr = 20000
+    filename = 'results/Proterozoic_retrieval_1.pkl'
+    nr = 100000
     NUM_PROCESS = 48
 
     samp = samples_for_photo(filename, nr, flx, r)
-    res = p_map(wrapper, samp, num_cpus=NUM_PROCESS)
-
-    with open('results/Proterozoic_flux_retrieval.pkl', 'wb') as f:
-        pickle.dump(res, f)
+    p_umap(wrapper, samp, num_cpus=NUM_PROCESS)
 

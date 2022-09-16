@@ -1,9 +1,12 @@
 import numpy as np
+import pickle
+import os
+import warnings
 from photochem import Atmosphere, zahnle_earth
 from photochem._photochem import PhotoException
 
 class FluxRetrieval():
-    
+
     mxsteps = 50000
     equilibrium_time = 1e17
     burnin_redox_steps = 5000
@@ -11,8 +14,16 @@ class FluxRetrieval():
     redox_tolerance = 1e-5
     species = ['CO2','CO','CH4','H2','O2']
     
-    def __init__(self,a,b,c,d):
+    def __init__(self, a, b, c, d, output_file):
         self.pc = Atmosphere(a,b,c,d)
+
+        if os.path.exists(output_file):
+            warnings.warn(output_file+' already exists. This simulation will append to it.')
+        else:
+            with open(output_file, 'wb') as f:
+                pass
+    
+        self.output_file = output_file
         
     def equilibrium(self, usol):
         self.pc.initialize_stepper(usol)
@@ -92,8 +103,13 @@ class FluxRetrieval():
                 out[key] = np.nan
 
         return out
-        
-    def find_equilibrium(self, log10mix):
+    
+    def save_output(self, success, res):
+        out = success, res
+        with open(self.output_file,'ab') as f:
+            pickle.dump(out, f)
+    
+    def find_equilibrium(self, log10mix) -> None:
         mix = 10.0**log10mix
         CO2, CO, CH4, H2, O2 = mix
         self.pc.set_lower_bc('CO2',bc_type='mix',mix = CO2)
@@ -105,7 +121,8 @@ class FluxRetrieval():
         # first try the correct answer
         success = self.equilibrium(self.pc.var.usol_init)
         if success:
-            return success, self.equilibrium_result(success)
+            self.save_output(success, self.equilibrium_result(success))
+            return
         
         # next try unform mixing ratios
         usol = np.ones_like(self.pc.var.usol_init)*1e-40
@@ -114,12 +131,10 @@ class FluxRetrieval():
             usol[ind,:] = mix[i]
         success = self.equilibrium(usol)
         if success:
-            return success, self.equilibrium_result(success)
+            self.save_output(success, self.equilibrium_result(success))
+            return
 
         # next try empty atmosphere
         usol = np.ones_like(self.pc.var.usol_init)*1e-40
         success = self.equilibrium(usol)
-        if success:
-            return success, self.equilibrium_result(success)
-        else:
-            return success, self.equilibrium_result(success)
+        self.save_output(success, self.equilibrium_result(success))
